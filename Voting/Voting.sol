@@ -10,18 +10,16 @@ contract Voting{
     struct VoteDetails{
         uint voterID;
         string voterName;
-        string PositionToVote;
         bool voted;
     }
    mapping(address => VoteDetails) _voteDetails;// mapping of voter's ID to their details
-   mapping(address => bool) voterAdded;
-   mapping(address => uint) votes;
+   mapping(address => bool) voterAdded; //to return if voter has been added or not
+   mapping(address => uint) votes;  //number of votes
 
     struct CandidatesDetails{
         uint candidateID;
         string candidateName;
         string position;
-        //uint voteCount;
     }
 
     address[] candidatesAddresses;
@@ -71,21 +69,19 @@ contract Voting{
         voterAdded[addr] = true;
     }
     //function to vote
-    function vote(address _candidateAddress, string memory _position) external  {
-        require(block.timestamp <= voteDeadline, "Time not reached");
+    function vote(address _candidateAddress) external  {
+        require(block.timestamp >= voteDeadline, "Time not reached");
         require(voterAdded[msg.sender] == true, "You are not among the voters");
         require(candidateAdded[_candidateAddress] == true, "This address is not a candidate");
         VoteDetails storage VD = _voteDetails[msg.sender];
-    //  require(_candidateAddress != );
-        VD.PositionToVote = _position;
         require(VD.voted == false, "Already voted");
         votes[_candidateAddress] += 1;
 
         VD.voted = true; 
     }
 
-    function showResult(address addr) public view returns(uint result){
-       result =  votes[addr];
+    function showResult(address candidAddr) public view returns(uint result){
+       result =  votes[candidAddr];
     }
 
     //function to get all candidates addresses
