@@ -7,10 +7,9 @@ contract TodoList{
         bool completed;
     }
 
-    uint ID = 1;
-    mapping(uint => Todo[]) _Todo;
+    mapping(address => Todo[]) _Todo;
 
-    event TaskAdded(uint ID,
+    event TaskAdded(address caller,
         string task,
         bool completed);
     
@@ -19,35 +18,35 @@ contract TodoList{
 
     //function to add todo
     function addTask(string memory _task) external{
-        _Todo[ID].push(Todo({
+        _Todo[msg.sender].push(Todo({
             task:_task,
             completed:false
         }));
-        emit TaskAdded(ID, _task, false);
+        emit TaskAdded(msg.sender, _task, false);
     }
 
     //function to update todo
-    function updateTask(string memory _task, uint taskid) public{
-        Todo storage td = _Todo[ID][taskid];
+    function updateTask(string memory _task, uint taskID) external{
+        Todo storage td = _Todo[msg.sender][taskID];
         td.task = _task;
     }
 
-    //function to return todo
+    //function to return all tasks
     function getTask() public view returns(Todo[] memory){
-        Todo[] storage td = _Todo[ID];
+        Todo[] storage td = _Todo[msg.sender];
         return td;
     }
 
     //function to checktask
-    function checkTask(uint taskID) public{
-        Todo memory td = _Todo[ID][taskID];
-         td.completed = true;
-         emit TaskCompleted(ID, true);
+    function completeTask(uint taskID) external{
+      Todo storage td = _Todo[msg.sender][taskID];
+      td.completed = true;
+         emit TaskCompleted(taskID, true);
     }
 
     //function to remove task
-    function removeTask(uint taskID) public view {
-         Todo memory td = _Todo[ID][taskID];
+    function removeTask(uint taskID) external view{
+         Todo memory td = _Todo[msg.sender][taskID];
          delete td;
     }
 
