@@ -6,7 +6,7 @@ import "./INFT.sol";
 
 contract Merkle{
     IAnkara4yanga nftAddr;
-    bytes32 public merkleRoot;
+    bytes32 public merkleRoot = 0xd38a533706a576a634c618407eb607df606d62179156c0bed7ab6c2088b01de9;
     mapping(address => bool) public whitelistClaimed;
 
     constructor(IAnkara4yanga _nftAddr) {
