@@ -1,40 +1,49 @@
-const { MerkleTree } = require('merkletreejs');
-const keccak256 = require('keccak256');
 import { ethers } from "hardhat";
 
-// 0X5B38DA6A701C568545DCFCB03FCB875F56BEDDC4
+const { MerkleTree } = require('merkletreejs');
+const keccak256 = require('keccak256');
+
+// Contract Address: 
 
 async function main() {
     console.log("Obtaining the addresses for hardhat");
     let whiteListedAddresses = await ethers.getSigners();
 
-    // Using keccak256 hashing algorithm to hash the leavves of the trees
-    const leaf_nodes = whiteListedAddresses.map(signer => keccak256(signer.address)); //this line of code would handle all the hashing
+    // Using keccak256 hashing algorithm to hash the leaves of the tree
+    const leafNodes = whiteListedAddresses.map(signer => keccak256(signer.address)); //this line of code would handle all the hashing
 
-    // now creating the merkle tree object
-    const merkleTree = new MerkleTree(leaf_nodes, keccak256, { sortPairs: true});
+    // Creating the merkle tree object
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true});
 
     // obtaining the root hash
     const rootHash = merkleTree.getHexRoot();
 
+    //testing if an address is in the merkle tree
+    const claimingAddress = leafNodes[0];
+    const hexProof = merkleTree.getHexProof(claimingAddress);
+
+    console.log(`The proof of the inputed address is: ${hexProof}`);
+
     // printing the merkle tree on the console
-    console.log('Whitelist Merkle Tree\n', merkleTree.toString());
+    console.log("Whitelist Merkle Tree", merkleTree.toString());
     console.log("Root Hash: ", rootHash);
 
-
-    // Important things to take note is the => (
     // User address, the proof (this would be gotten using the merkle tree object) and the root hash
-    // )
 
-    // Here is the user story, the user who is coming with an address (msg.sender) whi call the backend, then the backend return the proof 
+
+    // Making the call to the smart contract
+    const NFT= await ethers.getContractFactory("Ankara4yanga");
+    const nft = await NFT.deploy();
+    await nft.deployed();
+
+    await nft.safeMint("ipfs://QmUpgEXndveyDFkXDQW3dp7ZiaSpZ7X9cfK54XwWwhguG9", hexProof);
+
+    const tokenID = await nft.tokenURI(0);
+
+    console.log(tokenID);
+    
 
 }
-
-
-// const claimingAddress = leafNodes[6];
-// const hexProof = merkleTree.getHexProof(claimingAddress);
-// console.log(hexProof);
-// console.log(merkleTree.verify(hexProof, claimingAddress, rootHash));
 
 main().catch((error) => {
     console.error(error);
