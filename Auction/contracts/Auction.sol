@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.7;
 
+/// @title Auction contract 
+/// @author Oluwatosin Serah Ajao
 
 interface IERC721 {
     function safeTransferFrom(
@@ -29,7 +31,7 @@ contract Auction {
     //address of the owner of the NFT declared as payable to be able to recive the highest bidding price in ether
     IERC721 immutable nftAddr; //address of the NFT
     uint immutable tokenID; 
-    uint deadline = block.timestamp + 60 seconds; //Auction duration
+    uint deadline = block.timestamp + 4 minutes; //Auction duration
     uint public highestBid;//highest ether bidded
     address public highestBidder; //address of the highest bidder
     bool started;
@@ -51,7 +53,7 @@ contract Auction {
     }
 
     modifier bidDuration() {
-        require(block.timestamp >= deadline, "Time has passed");
+        require(block.timestamp <= deadline, "Time has passed");
         _;
     }
 
@@ -76,10 +78,12 @@ contract Auction {
     }
 
     //function to bid NFT, anyone can bid but owner can't bid
-    function placeBid() external payable bidDuration{
+    function placeBid() external payable bidDuration {
+        bidder storage b = biddersBalance[msg.sender];
+        require(!b.bidded, "You have already bidded" );
         require(msg.value > highestBid, "Bid more");
         require(msg.sender != owner, "Owner can't bid");
-        bidder storage b = biddersBalance[msg.sender];
+
         if(msg.sender != address(0)){
             b.amountTobid += msg.value;
         }
@@ -94,43 +98,51 @@ contract Auction {
     }
     //function to withdraw, ether to be transferred to the bidder that didn't win
     function withdraw() external{
+        require(ended, "We never ready!");
         require(msg.sender != address(0), "Input a valid address");
+        require(biddersBalance[msg.sender].amountTobid > 0, "You didn't place a bid");
          uint amount = biddersBalance[msg.sender].amountTobid;
+        //require (amount > 0, "You don't have any money to withdraw");
          biddersBalance[msg.sender].amountTobid = 0; //to avoid reentrancy
 
-         for(uint i = 0; i < biddersAddresses.length; i++){
+         payable(msg.sender).transfer(amount);
+         /*for(uint i = 0; i < biddersAddresses.length; i++){
             if(msg.sender == biddersAddresses[i]){
                  payable(msg.sender).transfer(amount);
             }else{
                 revert("Not among the bidders");
             }
-         }
+         }**/
+
          emit withdrawBid(msg.sender, amount);
 
     }
 
     //function to end aunction, NFT should be sent to the highest bidder here
     function endAunction() external onlyOwner{
-        if(ended == true){
+
+           if(ended == true){
             revert auctionEnded();
         }
 
-        ended = true;
+       // require(ended == false, "Auction already ended!");
+
         if(highestBidder != address(0)){
             nftAddr.safeTransferFrom(address(this), highestBidder, tokenID);
-            owner.transfer(highestBid);
+            payable(owner).transfer(highestBid);
         }else{
             nftAddr.safeTransferFrom(address(this), owner, tokenID);
         }
+        ended = true;
 
         emit EndAunction(highestBidder, highestBid);
     }
 
     //function to transfer ether 
-    function transferEther() external payable{
+    /*function transferEther() external payable{
         require(msg.sender != address(0), "Input a valid address");
         payable(msg.sender).transfer(address(this).balance);
-    }
+    }*/
 
     //function to get contract balance
     function getContractBalance() public view returns(uint bal){

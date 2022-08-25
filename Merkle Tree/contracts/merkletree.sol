@@ -18,7 +18,7 @@ contract Merkle{
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
         require(
             MerkleProof.verify(proof, merkleRoot, leaf),
-            "Invalid Merkle Proof."
+            "You are not among the whitelisted Addresses"
         );
         nftAddr.safeMint(msg.sender);
         whitelistClaimed[msg.sender] = true;

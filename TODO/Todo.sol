@@ -1,6 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+/// @title TODO contract 
+/// @author Oluwatosin Serah Ajao
+
 contract TodoList{
     struct Todo{
         string task;

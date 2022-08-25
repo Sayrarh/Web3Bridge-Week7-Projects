@@ -11,7 +11,7 @@ contract Ankara4yanga is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    uint256 MAX_SUPPLY = 29; // The NFT has a max supply of 29
+    uint256 MAX_SUPPLY = 29; // The NFT has a max supply of 30
     string nfturi = "ipfs://QmUpgEXndveyDFkXDQW3dp7ZiaSpZ7X9cfK54XwWwhguG9";
 
 

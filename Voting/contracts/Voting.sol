@@ -1,6 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+/// @title Voting contract 
+/// @author Oluwatosin Serah Ajao
+
 contract Voting{
     address admin; 
     uint voteDeadline = block.timestamp + 240 seconds;

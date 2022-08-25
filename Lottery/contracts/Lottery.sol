@@ -1,6 +1,9 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+/// @title Lottery contract 
+/// @author Oluwatosin Serah Ajao
+
 contract Lottery{
     address public owner; //address of lottery owner
     
