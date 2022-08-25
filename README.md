@@ -1,4 +1,5 @@
 # Web3Bridge-Week7-Projects
+
 ## Voting
 ### The idea behind this voting project is similar to how people choose their preferred candidate in regular elections, but in this case I restricted that only the owner of the smart contract can add voters and candidates before allowing voters to cast their ballots.
 
