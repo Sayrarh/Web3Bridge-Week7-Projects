@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.4;
 
 /// @title Auction contract 
 /// @author Oluwatosin Serah Ajao
@@ -28,10 +28,10 @@ contract Auction {
     event withdrawBid(address bidder, uint bidAmount);
 
     address payable owner;
-    //address of the owner of the NFT declared as payable to be able to recive the highest bidding price in ether
+    //address of the owner of the NFT declared as payable to be able to receive the highest bidding price in ether
     IERC721 immutable nftAddr; //address of the NFT
     uint immutable tokenID; 
-    uint deadline = block.timestamp + 4 minutes; //Auction duration
+    uint deadline = block.timestamp + 30 minutes; //Auction duration
     uint public highestBid;//highest ether bidded
     address public highestBidder; //address of the highest bidder
     bool started;
@@ -42,10 +42,10 @@ contract Auction {
         bool bidded;
     }
 
+
     address[] biddersAddresses;
     mapping(address => bidder) public biddersBalance;
    
-    //2000000000000000000
 
      modifier onlyOwner(){
         require(owner == msg.sender, "Not owner");
@@ -96,6 +96,7 @@ contract Auction {
         emit Aunction(msg.sender, msg.value);
 
     }
+
     //function to withdraw, ether to be transferred to the bidder that didn't win
     function withdraw() external{
         require(ended, "We never ready!");
@@ -118,10 +119,10 @@ contract Auction {
 
     }
 
-    //function to end aunction, NFT should be sent to the highest bidder here
+    //function to end aunction, NFT should be transferred from the contract to the highest bidder here
     function endAunction() external onlyOwner{
 
-           if(ended == true){
+         if(ended == true){
             revert auctionEnded();
         }
 
@@ -137,12 +138,6 @@ contract Auction {
 
         emit EndAunction(highestBidder, highestBid);
     }
-
-    //function to transfer ether 
-    /*function transferEther() external payable{
-        require(msg.sender != address(0), "Input a valid address");
-        payable(msg.sender).transfer(address(this).balance);
-    }*/
 
     //function to get contract balance
     function getContractBalance() public view returns(uint bal){

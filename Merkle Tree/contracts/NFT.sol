@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 // only owner can NFT mint to users
-contract Ankara4yanga is ERC721URIStorage {
-    constructor() ERC721("Ankara4yanga", "A4Y"){}
+contract WordSanctuary is ERC721URIStorage {
+    constructor() ERC721("WordSanctuary", "WSC"){}
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -26,3 +26,4 @@ contract Ankara4yanga is ERC721URIStorage {
     }
 
 }
+

@@ -38,7 +38,7 @@ contract Lottery{
     }
 
     //function to pick winner among the participants
-    function pickWinner() public view access returns(address win){
+    function pickWinner() private view access returns(address win){
         require(block.timestamp <= deadline, "Time gone");
         require(participants.length >= 4, "Participants not complete");
         uint randNum = random() ; //to the random number
