@@ -96,7 +96,7 @@ contract Auction {
         emit Aunction(msg.sender, msg.value);
 
     }
-
+//    
     //function to withdraw, ether to be transferred to the bidder that didn't win
     function withdraw() external{
         require(ended, "We never ready!");
@@ -119,6 +119,7 @@ contract Auction {
 
     }
 
+
     //function to end aunction, NFT should be transferred from the contract to the highest bidder here
     function endAunction() external onlyOwner{
 
@@ -138,7 +139,7 @@ contract Auction {
 
         emit EndAunction(highestBidder, highestBid);
     }
-
+    
     //function to get contract balance
     function getContractBalance() public view returns(uint bal){
         bal = address(this).balance;
@@ -150,4 +151,7 @@ contract Auction {
     }
 
     receive() external payable{}
+
+   
+    
 }

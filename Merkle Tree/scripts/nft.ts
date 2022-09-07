@@ -1,11 +1,14 @@
+require("dotenv").config({ path: ".env" });
 import { ethers } from "hardhat";
+const helpers = require("@nomicfoundation/hardhat-network-helpers");
 
 async function main() {
 
   //Contract Address: 0xb25FA054028a83C2440eDff6654660d10773fA49
+  const NFT_ADDRESS = "0xb25FA054028a83C2440eDff6654660d10773fA49";
 
   const MerkleNFT= await ethers.getContractFactory("WordSanctuary");
-  const merkleNft = await MerkleNFT.deploy(); //pass in the nft address
+  const merkleNft = await MerkleNFT.deploy(NFT_ADDRESS); //pass in the nft address
 
   await merkleNft.deployed();
 

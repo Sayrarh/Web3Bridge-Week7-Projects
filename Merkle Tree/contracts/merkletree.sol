@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./INFT.sol";
 
 contract Merkle{
-    IAnkara4yanga nftAddr;
+    IWordSanctuary nftAddr;
     bytes32 public merkleRoot = 0x36aa3b65c321d69df189e026faa86d44b415330c17ac0e26045ead2284c63a6b;
     mapping(address => bool) public whitelistClaimed;
 
-    constructor(IAnkara4yanga _nftAddr) {
+    constructor(IWordSanctuary _nftAddr) {
         nftAddr = _nftAddr;
     }
         
